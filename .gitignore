@@ -1,0 +1,5 @@
+*.pem
+ssl/
+*.log
+*.db
+.env
