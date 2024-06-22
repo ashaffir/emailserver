@@ -31,6 +31,7 @@ services:
     networks:
       - external_network
 
+
   webmail:
     image: roundcube/roundcubemail:latest
     container_name: webmail
@@ -41,13 +42,9 @@ services:
       - ROUNDCUBEMAIL_DB_TYPE=sqlite
       - ROUNDCUBEMAIL_DB_DIR=/var/roundcube/db
     volumes:
-      - webmaildata:/var/www/html
-      - ./roundcube-config/:/tmp/roundcube-config/
       - ./config/roundcube/db:/var/roundcube/db
-      - ./copy-config.sh:/docker-entrypoint.d/copy-config.sh
     ports:
       - "8080:80"
-    entrypoint: ["/docker-entrypoint.d/copy-config.sh"]
     networks:
       - external_network
 
