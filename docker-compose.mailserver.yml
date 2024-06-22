@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  mailserver:
+    image: mailserver/docker-mailserver:latest
+    hostname: mail
+    domainname: advacor.org
+    container_name: mailserver
+    env_file: .env
+    ports:
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "993:993"
+    volumes:
+      - maildata:/var/mail
+      - mailstate:/var/mail-state
+      - maillogs:/var/log/mail
+      - ./config/:/tmp/docker-mailserver/
+      - ./ssl:/etc/letsencrypt/live
+    environment:
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=0
+      - SSL_TYPE=letsencrypt
+    cap_add:
+      - NET_ADMIN
+      - SYS_PTRACE
+    restart: unless-stopped
+    networks:
+      - external_network
+
+  webmail:
+    image: roundcube/roundcubemail:latest
+    container_name: webmail
+    environment:
+      - ROUNDCUBEMAIL_DEFAULT_HOST=mailserver
+      - ROUNDCUBEMAIL_SMTP_SERVER=mailserver
+      - ROUNDCUBEMAIL_USERNAME_DOMAIN=advacor.org
+      - ROUNDCUBEMAIL_DB_TYPE=sqlite
+      - ROUNDCUBEMAIL_DB_DIR=/var/roundcube/db
+    volumes:
+      - webmaildata:/var/www/html
+      - ./roundcube-config/:/tmp
+      - ./config/roundcube/db:/var/roundcube/db
+      - ./copy-config.sh:/docker-entrypoint.d/copy-config.sh
+    ports:
+      - "8080:80"
+    entrypoint: ["/docker-entrypoint.d/copy-config.sh"]
+    networks:
+      - external_network
+
+volumes:
+  maildata:
+  mailstate:
+  maillogs:
+  webmaildata:
+  roundcube-db:
+
+networks:
+  external_network:
+    external:
+      name: actappon_wordpress_network
+
