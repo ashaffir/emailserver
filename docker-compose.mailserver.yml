@@ -42,7 +42,7 @@ services:
       - ROUNDCUBEMAIL_DB_DIR=/var/roundcube/db
     volumes:
       - webmaildata:/var/www/html
-      - ./roundcube-config/:/tmp
+      - ./roundcube-config/:/tmp/roundcube-config/
       - ./config/roundcube/db:/var/roundcube/db
       - ./copy-config.sh:/docker-entrypoint.d/copy-config.sh
     ports:
