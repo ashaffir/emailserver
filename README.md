@@ -33,3 +33,7 @@ Exit the docker.
 
 **Do NOT restart the docker. If restarted, you need to repeat steps 3 and 4**
 
+4) Add a new email user
+./setup.sh email add info@advacor.org 1qazxsw2
+
+* don't use "!" in the password

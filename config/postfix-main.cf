@@ -5,3 +5,5 @@ smtp_sasl_password_maps = hash:/tmp/docker-mailserver/sasl_passwd
 smtp_sasl_security_options = noanonymous
 smtp_tls_security_level = encrypt
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+sender_dependent_relayhost_maps = hash:/tmp/docker-mailserver/sender_relay
+sender_canonical_maps = hash:/tmp/docker-mailserver/sender_canonical
